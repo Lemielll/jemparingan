@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Target/Bandul — Jemparingan Scorekeeper</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+    :root {
+      --bg: #fbf7f1;
+      --card: #fffaf5;
+      --accent: #0A192F;
+      --muted: #6b5b50;
+      --shadow: rgba(0,0,0,0.06);
+      --danger: #d9534f; 
+      font-family: "Poppins", "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      width: 100vw;
+      min-height:100vh;
+      display:flex;
+      flex-direction: column;
+      background: linear-gradient(180deg, var(--bg), #fffaf0);
+    }
+    .wrap{
+      width: 100vw; 
+      background:var(--card);
+      border-radius:12px;
+      height: 100vh;
+      z-index: 1;
+    } 
+
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom: 12px;}
+    h1{margin:0;font-size:24px;color:var(--accent);}
+    p.lead{margin:4px 0 0;color:var(--muted)}
+    .choices{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px; padding: 0px 14px 0px 14px; flex-direction: column;}
+    .option{
+      flex:1;
+      min-width:220px;
+      padding:18px;
+      border-radius:10px;
+      background:linear-gradient(180deg,#FFF4DC,#E5C38E );
+      border:1px solid #000;
+      cursor:pointer;
+      transition:transform .14s ease, box-shadow .14s ease;
+      display:flex; 
+      flex-direction: row; 
+      align-items: center; 
+      gap: 15px; 
+    }
+    .option:hover{transform:translateY(-6px);box-shadow:0 10px 30px rgba(0,0,0,0.06)}
+    .option.selected{outline:1px solid rgb(10, 25, 47);box-shadow:0 12px 30px rgba(0,0,0,0.08);transform:translateY(-6px)}
+    .option-content {
+      flex-grow: 1; 
+    }
+    .option h2{margin:0;color:var(--accent);font-size:18px}
+    .option p{margin:0;color:var(--muted);font-size:13px}
+    .foot{display:flex;justify-content:space-between;align-items:center;margin-top: 14px; padding: 14px; margin-top: 40%}
+    .foot button{
+      width: 48%;
+      border: 1px solid #1E1E1E;
+      border-radius: 10px;
+      height: 40px;
+      font-family: poppins, sans-serif;
+    }
+    .foot button:first-child{
+      background: #FFF;
+      color: #1E1E1E;
+    }
+    .foot button:last-child{
+      background: var(--accent);
+      color: #FFF;
+      border: none;
+    }
+    .small{font-size:12px;color:var(--muted)}
+    .btn{
+      background:var(--accent);
+      color:#fff;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;
+      box-shadow:0 3px 8px rgba(139,94,60,0.18)
+    }
+    @media (max-width:640px){ .choices{flex-direction:column}}
+
+    /* --- CSS VISUAL BANDUL --- */
+    .bandul-visual {
+      height: 90px; 
+      width: 18px;  
+      border: 1px solid rgba(0,0,0,0.1); 
+      border-radius: 3px; 
+      flex-shrink: 0; 
+      align-self: center; 
+    }
+    .bandul-321 {
+      background: linear-gradient(to bottom,
+        var(--danger) 0%,           
+        var(--danger) 16.67%,
+        gold 16.67%,                
+        gold 30%,
+        #fff 30%,                  
+        #fff 100%                 
+      );
+    }
+    .bandul-13 {
+      background: linear-gradient(to bottom,
+        var(--danger) 0%,
+        var(--danger) 16.67%,
+        #fff 16.67%,
+        #fff 100%
+      );
+    }
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <img src="/assets/bg.svg" style="max-width: 100%;" alt="">
+        <h1 style="margin: 14px 14px 0px 14px;">Pemilihan Sistem Penilaian</h1>
+      </div>
+    </header>
+
+    <div class="choices">
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <p style="margin: 0; font-weight: bold;">Nama Sesi</p>
+        <form action="" style="position: relative;">
+          <label for="session-name" style="position: absolute; left: 8px; top: 10px;">
+            <img src="/assets/Input.svg" alt="" style="width: 20px; height: 20px; display: block;">
+          </label>
+          <input type="text" name="session-name" required id="session-name" style="border: 1px solid #C4D3DF; height: 40px; border-radius: 8px; padding: 8px 12px 8px 40px; width: 100%;" placeholder="jemparingan">
+        </form>
+        <p style="margin: 0; font-size: 14px;">Menembakkan <span style="font-weight: bold;">4 anak panah</span>/seri dengan maksimal 20 seri untuk 1 sesi</p>
+      </div>
+      <div class="option" id="opt-321">
+        <div class="option-content">
+          <h2>Bandul 3 – 2 – 1</h2>
+          <p>Skor terdiri dari poin 3, poin 2, dan poin 1.</p>
+          <p class="small">Bandul terbagi menjadi 3 bagian yaitu Molo, Jonggo, dan Awak.</p>
+        </div>
+        <div class="bandul-visual bandul-321"></div> 
+      </div>
+
+      <div class="option" id="opt-31">
+        <div class="option-content">
+          <h2>Bandul 3 – 1</h2>
+          <p>Skor hanya terdiri dari poin 3, dan poin 1.</p>
+          <p class="small">Bandul terbagi menjadi 2 bagian yaitu Molo, dan Awak.</p>
+        </div>
+        <div class="bandul-visual bandul-13"></div>
+      </div>
+    </div>
+    <div class="foot">
+      <button id="index-reset" type="button">
+        Reset
+      </button>
+      <button id="index-submit" type="button" class="btn" style="background-color: var(--accent);">
+        Lanjut
+      </button>
+    </div>
+    <img src="/assets/batik blur 9.svg" alt="" style="position: absolute; bottom: 0; right: 0; z-index: -1;">
+  </div>
+
+  <script>
+    (function(){
+      let selectedMode = localStorage.getItem('targetMode') || null;
+      const opt321 = document.getElementById('opt-321');
+      const opt31 = document.getElementById('opt-31');
+      const submitBtn = document.getElementById('index-submit');
+      const resetBtn = document.getElementById('index-reset');
+      const sessionInput = document.getElementById('session-name');
+
+      function updateSelectionUI(){
+        [opt321, opt31].forEach(el => el.classList.remove('selected'));
+        if(selectedMode === '321') opt321.classList.add('selected');
+        if(selectedMode === '31') opt31.classList.add('selected');
+      }
+
+      opt321.addEventListener('click', ()=> { selectedMode = '321'; updateSelectionUI(); });
+      opt31.addEventListener('click', ()=> { selectedMode = '31'; updateSelectionUI(); });
+
+      submitBtn.addEventListener('click', ()=> {
+        const name = (sessionInput.value || '').trim();
+        if(!selectedMode) return alert('Pilih mode bandul terlebih dahulu.');
+        if(!name) return alert('Masukkan nama sesi sebelum melanjutkan.');
+        localStorage.setItem('targetMode', selectedMode);
+        localStorage.setItem('sessionName', name);
+        window.location.href = 'jemparingan.html';
+      });
+
+      resetBtn.addEventListener('click', ()=> {
+        sessionInput.value = '';
+        selectedMode = null;
+        localStorage.removeItem('targetMode');
+        localStorage.removeItem('sessionName');
+        updateSelectionUI();
+      });
+
+      if (selectedMode) updateSelectionUI();
+      if (sessionInput && localStorage.getItem('sessionName')) sessionInput.value = localStorage.getItem('sessionName');
+    })();
+  </script>
+</body>
+</html>

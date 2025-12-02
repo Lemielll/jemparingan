@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Scan Barcode</title>
+  <style>
+    body { 
+      font-family: "Segoe UI", Roboto, system-ui, -apple-system, sans-serif;
+      background: #333; 
+      color: white; 
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      align-items: center;
+      justify-content: center;
+    }
+    .wrap {
+      width: 90%;
+      max-width: 450px; 
+      text-align: center;
+      transform: scale(1.25);
+    }
+    h1 {
+      margin-bottom: 30px;
+      font-size: 1.8em;
+      color: #FFD700; 
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }
+    /* ... (Sisa CSS Anda tidak berubah) ... */
+    .scan-area {
+      position: relative; 
+      width: 300px; 
+      height: 300px; 
+      border: 2px solid rgba(255, 255, 255, 0.2); 
+      border-radius: 10px; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2em;
+      background: rgba(0, 0, 0, 0.7); 
+      margin: 20px auto 30px auto; 
+      overflow: hidden; 
+    }
+    .scan-area::before,
+    .scan-area::after {
+      content: '';
+      position: absolute;
+      width: 40px; 
+      height: 40px; 
+      border-color: #FFD700; 
+      border-style: solid;
+      border-width: 0;
+    }
+    .scan-area::before {
+      top: 0;
+      left: 0;
+      border-top-width: 3px; 
+      border-left-width: 3px; 
+      border-top-left-radius: 8px; 
+    }
+    .scan-area::after {
+      bottom: 0;
+      right: 0;
+      border-bottom-width: 3px;
+      border-right-width: 3px;
+      border-bottom-right-radius: 8px;
+    }
+    .scan-area .corner-top-right,
+    .scan-area .corner-bottom-left {
+      content: '';
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-color: #FFD700;
+      border-style: solid;
+      border-width: 0;
+    }
+    .scan-area .corner-top-right {
+      top: 0;
+      right: 0;
+      border-top-width: 3px;
+      border-right-width: 3px;
+      border-top-right-radius: 8px;
+    }
+    .scan-area .corner-bottom-left {
+      bottom: 0;
+      left: 0;
+      border-bottom-width: 3px;
+      border-left-width: 3px;
+      border-bottom-left-radius: 8px;
+    }
+    p {
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: #bbb;
+    }
+    input[type="text"] {
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #999;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 12px;
+      font-size: 1em;
+      background: #444; 
+      color: white;
+    }
+    input[type="text"]::placeholder {
+        color: #aaa;
+    }
+    button {
+      padding: 12px 20px;
+      background: #FFD700; 
+      color: #333;
+      border-radius: 8px;
+      font-weight: 700; 
+      text-decoration: none;
+      border: none;
+      font-size: 1.1em; 
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s ease-in-out;
+    }
+    button:hover {
+        background: #FFC107; 
+    }
+    #closeBtn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 2.5em; 
+      color: #aaa;
+      text-decoration: none;
+      font-weight: 300; 
+      line-height: 1;
+      padding: 5px;
+      transition: color 0.2s ease;
+    }
+    #closeBtn:hover {
+      color: #FFD700; 
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wrap">
+    <a href="jemparingan.html" id="closeBtn" title="Selesai & Kembali">&times;</a>
+    <h1 style="font-size: 20px;">Scan Barcode Atlet</h1>
+    <div class="scan-area">
+      <div class="corner-top-right"></div>
+      <div class="corner-bottom-left"></div>
+      <span style="color: #bbb;">Arahkan Kamera Disini</span>
+    </div>
+    
+    <p>Barcode berisi nama atlet</p>
+    <input type="text" id="fakeScanInput" placeholder="Masukkan isi barcode" style="width: 80%;" />
+    <button id="fakeScanBtn" style="width: 80%;">Simulasikan Scan & Lanjut</button>
+
+  <script>
+    document.getElementById('fakeScanBtn').addEventListener('click', () => {
+      const nameInput = document.getElementById('fakeScanInput').value;
+      const name = nameInput.toLowerCase();
+      if (!nameInput) {
+        alert('Untuk simulasi, masukkan nama atlet.');
+        return;
+      }
+
+      const stateJSON = localStorage.getItem('jemparinganState');
+      const queueJSON = localStorage.getItem('scannedScoresQueue') || '[]';
+      
+      let currentEnd = 1;
+      let existingScores = 0;
+      let pendingScores = 0;
+
+      if (stateJSON) {
+        try {
+          const state = JSON.parse(stateJSON);
+          currentEnd = state.currentEnd;
+          
+          const p = state.competitors.find(c => c.name.toLowerCase() === name);
+          if (p) {
+            existingScores = p.scores[currentEnd].filter(s => s !== null).length;
+          }
+        } catch (e) { console.error("Gagal baca state:", e); }
+      }
+      
+      try {
+        const queue = JSON.parse(queueJSON);
+        pendingScores = queue.filter(item => item.name.toLowerCase() === name).length;
+      } catch (e) { console.error("Gagal baca antrian:", e); }
+
+      const totalPending = existingScores + pendingScores;
+      
+      if (totalPending >= 4) {
+        alert(`Skor Seri ${currentEnd} untuk ${nameInput} sudah penuh (4 panah).\n\n(Skor tersimpan: ${existingScores}, Skor di antrian: ${pendingScores})`);
+        return;
+      }
+      
+      localStorage.setItem('atletUntukScan', nameInput);
+      window.location.href = 'visual-bandul.html';
+    });
+  </script>
+</body>
+</html>

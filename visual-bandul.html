@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Perkenaan Anak Panah</title>
+  <style>
+    :root {
+      --danger: #d9534f;
+      font-family: "Segoe UI", Roboto, system-ui, -apple-system, sans-serif;
+    }
+    body {
+      background: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      text-align: center;
+      /* HAPUS 'transform' & 'overflow' DARI SINI */
+    }
+    .wrap {
+      width: 90%;
+      max-width: 300px;
+      /* --- TAMBAHKAN SKALA DI SINI --- */
+      transform: scale(1.25);
+      padding: 80px;
+    }
+    h1 { font-size: 1.5em; }
+    #athleteName { color: #8b5e3c; }
+    .bandul-visual {
+      height: 400px;
+      width: 80px;  
+      border: 2px solid #333; 
+      border-radius: 10px; 
+      margin: 20px auto;
+      cursor: pointer;
+    }
+    .bandul-321 {
+      background: linear-gradient(to bottom,
+        var(--danger) 0%, var(--danger) 16.67%,
+        gold 16.67%, gold 30%,
+        #fff 30%, #fff 100%                 
+      );
+    }
+    .bandul-31 {
+      background: linear-gradient(to bottom,
+        var(--danger) 0%, var(--danger) 16.67%,
+        #fff 16.67%, #fff 100%
+      );
+    }
+    
+    #closeBtn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 2.5em; 
+      color: #aaa;
+      text-decoration: none;
+      font-weight: 300; 
+      line-height: 1;
+      padding: 5px;
+      transition: color 0.2s ease;
+    }
+    #closeBtn:hover {
+      color: #333; 
+    }
+  </style>
+</head>
+<body>
+
+  
+
+  <div class="wrap">
+    <a href="kamera.html" id="closeBtn" title="Batal & Kembali ke Scan">&times;</a>
+    <h1>Input Skor Visual</h1>
+    <h2>Untuk: <span id="athleteName">...</span></h2>
+    <p>Klik pada area bandul di bawah untuk mencatat skor</p>
+
+    <div id="bandulClickArea"></div>
+
+  <script>
+    // ... (Script Anda tidak berubah)
+    document.addEventListener('DOMContentLoaded', () => {
+      const athleteName = localStorage.getItem('atletUntukScan');
+      const mode = localStorage.getItem('targetMode') || '321';
+      
+      localStorage.removeItem('atletUntukScan');
+
+      const bandulEl = document.getElementById('bandulClickArea');
+      
+      if (!athleteName) {
+        alert('Error: Tidak ada nama atlet. Kembali ke pemindai.');
+        window.location.href = 'kamera.html';
+        return;
+      }
+
+      document.getElementById('athleteName').textContent = athleteName;
+      bandulEl.className = 'bandul-visual ' + (mode === '321' ? 'bandul-321' : 'bandul-31');
+
+      bandulEl.addEventListener('click', (e) => {
+        const yPos = e.offsetY;
+        const height = bandulEl.clientHeight;
+        const perc = (yPos / height) * 100;
+        
+        let score = 0;
+        
+        if (perc <= 16.67) {
+          score = 3;
+        } else if (mode === '321' && perc <= 30) {
+          score = 2;
+        } else {
+          score = 1;
+        }
+
+        const newScoreData = { score: score, lokasi: perc.toFixed(2), isM: false };
+        tambahkanKeAntrian(athleteName, newScoreData);
+      });
+
+      function tambahkanKeAntrian(name, data) {
+        const entry = { name: name, scoreData: data };
+        let queue = JSON.parse(localStorage.getItem('scannedScoresQueue') || '[]');
+        queue.push(entry);
+        localStorage.setItem('scannedScoresQueue', JSON.stringify(queue));
+        
+        window.location.href = 'kamera.html';
+      }
+    });
+  </script>
+</body>
+</html>
