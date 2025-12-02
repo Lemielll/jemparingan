@@ -30,6 +30,7 @@
       border-radius:12px;
       height: 100vh;
       z-index: 1;
+      padding-bottom: 110px; /* reserve space for fixed footer */
     } 
 
     header{display:flex;align-items:center;justify-content:space-between;margin-bottom: 12px;}
@@ -57,12 +58,28 @@
     }
     .option h2{margin:0;color:var(--accent);font-size:18px}
     .option p{margin:0;color:var(--muted);font-size:13px}
-    .foot{display:flex;justify-content:space-between;align-items:center;margin-top: 14px; padding: 14px; margin-top: 40%}
+    /* Fixed footer bar for submit/reset */
+    .foot{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding: 12px 16px;
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 18px;
+      width: calc(100% - 32px);
+      max-width: 720px;
+      background: transparent;
+      z-index: 60;
+      pointer-events: auto;
+    }
     .foot button{
       width: 48%;
       border: 1px solid #1E1E1E;
       border-radius: 10px;
-      height: 40px;
+      height: 48px;
       font-family: poppins, sans-serif;
     }
     .foot button:first-child{
